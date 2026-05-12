@@ -80,7 +80,7 @@ export default function Nav() {
           {!isDiscover && (
             <Link
               href="/discover"
-              className="flex items-center gap-1.5 px-4 py-2 rounded-sm bg-siren text-cream font-display text-[13px] tracking-wide hover:bg-siren/90 active:scale-[0.97] transition-all duration-150"
+              className="flex items-center gap-1.5 px-4 py-2 bg-siren text-cream font-display text-[13px] tracking-wide hover:bg-siren/90 active:scale-[0.97] transition-all duration-150"
             >
               <MapPin className="w-3 h-3" strokeWidth={2.5} />
               {tr.discover}

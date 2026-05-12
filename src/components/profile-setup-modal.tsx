@@ -2,39 +2,51 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, AtSign, User, FileText } from "lucide-react";
 
 const STORAGE_KEY = "bam_profile_setup_done";
+const DISCOVER_KEY = "bam_profile_setup_discover_done";
 
 export default function ProfileSetupModal() {
   const { data: session, update } = useSession();
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [instagram, setInstagram] = useState("");
   const [bio, setBio] = useState("");
   const [saving, setSaving] = useState(false);
   const [done, setDone] = useState(false);
-  const shown = useRef(false);
+  const shownForPath = useRef<string | null>(null);
 
   useEffect(() => {
     if (!session?.user) return;
-    if (shown.current) return;
-    if (typeof window !== "undefined" && sessionStorage.getItem(STORAGE_KEY)) return;
+    // Already showing or already shown for this path this session
+    if (shownForPath.current === pathname) return;
+
+    // Each route has its own session key so /discover can show even if / already did
+    const key = pathname === "/discover" ? DISCOVER_KEY : STORAGE_KEY;
+    if (typeof window !== "undefined" && sessionStorage.getItem(key)) return;
 
     // Show if profile is incomplete (no bio and no instagram)
     const needsSetup = !session.user.bio && !(session.user as { instagram?: string }).instagram;
     if (needsSetup) {
-      shown.current = true;
+      shownForPath.current = pathname;
       setName(session.user.name ?? "");
       setInstagram((session.user as { instagram?: string }).instagram ?? "");
       setBio(session.user.bio ?? "");
       setOpen(true);
     }
-  }, [session]);
+  }, [session, pathname]);
 
   function dismiss() {
-    if (typeof window !== "undefined") sessionStorage.setItem(STORAGE_KEY, "1");
+    const key = pathname === "/discover" ? DISCOVER_KEY : STORAGE_KEY;
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem(key, "1");
+      // Also mark the global key so other non-discover pages don't re-show
+      sessionStorage.setItem(STORAGE_KEY, "1");
+    }
     setOpen(false);
   }
 
@@ -52,7 +64,10 @@ export default function ProfileSetupModal() {
       });
       await update();
       setDone(true);
-      if (typeof window !== "undefined") sessionStorage.setItem(STORAGE_KEY, "1");
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem(STORAGE_KEY, "1");
+        sessionStorage.setItem(DISCOVER_KEY, "1");
+      }
       setTimeout(() => setOpen(false), 1200);
     } finally {
       setSaving(false);

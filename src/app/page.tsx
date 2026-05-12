@@ -369,7 +369,7 @@ export default function HomePage() {
             style={{
               width: 800, height: 600,
               top: -200, right: -180,
-              background: "radial-gradient(circle at 40% 40%, rgba(255,45,45,0.55) 0%, rgba(200,20,20,0.2) 40%, transparent 70%)",
+              background: "radial-gradient(circle at 40% 40%, rgba(255,45,45,0.28) 0%, rgba(200,20,20,0.10) 40%, transparent 70%)",
               filter: "blur(60px)",
             }}
           />
@@ -379,7 +379,7 @@ export default function HomePage() {
             style={{
               width: 560, height: 480,
               bottom: -60, left: -80,
-              background: "radial-gradient(circle at 60% 60%, rgba(255,208,0,0.38) 0%, rgba(255,160,0,0.12) 45%, transparent 70%)",
+              background: "radial-gradient(circle at 60% 60%, rgba(255,208,0,0.18) 0%, rgba(255,160,0,0.06) 45%, transparent 70%)",
               filter: "blur(70px)",
             }}
           />
@@ -389,7 +389,7 @@ export default function HomePage() {
             style={{
               width: 400, height: 360,
               top: "35%", left: "30%",
-              background: "radial-gradient(circle, rgba(255,90,30,0.18) 0%, transparent 65%)",
+              background: "radial-gradient(circle, rgba(255,90,30,0.09) 0%, transparent 65%)",
               filter: "blur(55px)",
             }}
           />
