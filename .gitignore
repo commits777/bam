@@ -36,6 +36,16 @@ yarn-error.log*
 # vercel
 .vercel
 
+# local sqlite db
+prisma/dev.db
+prisma/dev.db-journal
+
+# claude code worktrees
+.claude/
+
+# local dev logs
+dev-output.txt
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
