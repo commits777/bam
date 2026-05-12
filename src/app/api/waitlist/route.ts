@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => null);
   if (!body) return NextResponse.json({ error: "Bad request" }, { status: 400 });
 
-  const { email, venue_id, venue_name, neighborhood, utm_source, utm_medium, utm_campaign } = body;
+  const { email, instagram, venue_id, venue_name, neighborhood, utm_source, utm_medium, utm_campaign } = body;
 
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return NextResponse.json({ error: "Valid email required" }, { status: 400 });
@@ -36,6 +36,7 @@ export async function POST(req: NextRequest) {
       email,
       venueId: venue_id,
       venueName: venue_name,
+      instagram: instagram ?? null,
       neighborhood: neighborhood ?? "",
       utmSource: utm_source ?? null,
       utmMedium: utm_medium ?? null,

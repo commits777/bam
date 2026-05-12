@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Archivo_Black, Bricolage_Grotesque, JetBrains_Mono } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
 import { LangProvider } from "@/contexts/lang-context";
+import LaunchPopup from "@/components/launch-popup";
 import "./globals.css";
 
 const archivo = Archivo_Black({
@@ -62,7 +63,10 @@ export default function RootLayout({
     >
       <body className="h-full">
         <SessionProvider>
-          <LangProvider>{children}</LangProvider>
+          <LangProvider>
+            <LaunchPopup />
+            {children}
+          </LangProvider>
         </SessionProvider>
       </body>
     </html>

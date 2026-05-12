@@ -12,6 +12,7 @@ interface WaitlistModalProps {
 
 export default function WaitlistModal({ venue, onClose }: WaitlistModalProps) {
   const [email, setEmail] = useState("");
+  const [instagram, setInstagram] = useState("");
   const [state, setState] = useState<"idle" | "loading" | "success" | "error">("idle");
 
   const launchDate = process.env.NEXT_PUBLIC_LAUNCH_DATE ?? "soon";
@@ -27,6 +28,7 @@ export default function WaitlistModal({ venue, onClose }: WaitlistModalProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email,
+          instagram: instagram || null,
           venue_id: venue.id,
           venue_name: venue.name,
           neighborhood: venue.neighborhood,
@@ -96,7 +98,7 @@ export default function WaitlistModal({ venue, onClose }: WaitlistModalProps) {
                   <span className="font-mono text-[10px] text-ink/35">· {venue.neighborhood}</span>
                 </div>
 
-                <form onSubmit={handleSubmit} className="flex gap-2">
+                <form onSubmit={handleSubmit} className="flex flex-col gap-2">
                   <input
                     type="email"
                     value={email}
@@ -104,12 +106,21 @@ export default function WaitlistModal({ venue, onClose }: WaitlistModalProps) {
                     placeholder="your@email.com"
                     required
                     autoFocus
-                    className="flex-1 min-w-0 px-4 py-3 bg-white border border-border text-[14px] font-body text-ink placeholder:text-ink/30 focus:outline-none focus:border-ink/40 transition-colors"
+                    className="w-full px-4 py-3 bg-white border border-border text-[14px] font-body text-ink placeholder:text-ink/30 focus:outline-none focus:border-ink/40 transition-colors"
                   />
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 font-mono text-[13px] text-ink/35">@</span>
+                    <input
+                      value={instagram}
+                      onChange={(e) => setInstagram(e.target.value)}
+                      placeholder="instagram_handle"
+                      className="w-full pl-8 pr-4 py-3 bg-white border border-border text-[14px] font-body text-ink placeholder:text-ink/30 focus:outline-none focus:border-ink/40 transition-colors"
+                    />
+                  </div>
                   <button
                     type="submit"
                     disabled={state === "loading"}
-                    className="shrink-0 px-5 py-3 bg-siren text-cream font-display text-[13px] tracking-wide hover:bg-siren/90 active:scale-[0.97] transition-all disabled:opacity-60 flex items-center gap-1.5"
+                    className="w-full py-3 bg-siren text-cream font-display text-[13px] tracking-wide hover:bg-siren/90 active:scale-[0.97] transition-all disabled:opacity-60 flex items-center justify-center gap-1.5"
                   >
                     {state === "loading" ? (
                       "..."
