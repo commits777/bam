@@ -76,10 +76,10 @@ export default function VenueCard({
       transition={{ duration: 0.3, delay: index * 0.04, ease: [0.25, 0.1, 0.25, 1] }}
       onClick={() => onSelect?.(venue)}
       className={cn(
-        "group relative bg-white rounded-sm overflow-hidden cursor-pointer border transition-all duration-200",
+        "group relative bg-cream rounded-sm overflow-hidden cursor-pointer border transition-all duration-200",
         selected
-          ? "border-siren ring-2 ring-siren/20 shadow-lg"
-          : "border-border hover:border-ink/25 hover:shadow-lg shadow-sm"
+          ? "border-siren ring-2 ring-siren/20 shadow-lg shadow-siren/10"
+          : "border-border hover:border-ink/20 hover:shadow-xl hover:shadow-black/8 shadow-sm"
       )}
     >
       {/* Image */}
@@ -90,7 +90,7 @@ export default function VenueCard({
           className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
           loading="lazy"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/5 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/5 to-transparent" />
 
         {/* Save button */}
         <motion.button

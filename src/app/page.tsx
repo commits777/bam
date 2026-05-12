@@ -23,19 +23,13 @@ const VIBE_STYLES: Record<Vibe, { bg: string; text: string }> = {
   "Experience":   { bg: "#FF2D2D", text: "#FFD000" },
 };
 
+// Film grain SVG (data URI) — used in hero + signin
+const GRAIN_BG = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E")`;
+
 type Tr = typeof t["EN"] | typeof t["EL"];
 
 // ─── Hero photo mosaic (desktop right column) ─────────────────────────────────
-// Four real Athens venue images arranged in an asymmetric 2×2 editorial grid.
-const MOSAIC = [
-  { venueIdx: 1, aspect: "portrait"   }, // tall left-top
-  { venueIdx: 3, aspect: "landscape"  }, // short right-top
-  { venueIdx: 4, aspect: "landscape"  }, // short right-bottom
-  { venueIdx: 0, aspect: "portrait"   }, // tall left-bottom — unused in 2-col layout
-];
-
 function HeroPhotoMosaic() {
-  const venues = [VENUES[1], VENUES[3], VENUES[4], VENUES[0]];
   const delays = [0.15, 0.25, 0.35, 0.2];
 
   return (
@@ -59,7 +53,7 @@ function HeroPhotoMosaic() {
                   className="w-full h-full object-cover scale-[1.02] group-hover:scale-[1.06] transition-transform duration-700"
                   draggable={false}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
                 <div
                   className="absolute top-3 left-3 px-2 py-0.5 font-mono text-[9px] font-bold tracking-widest uppercase"
                   style={{ background: style.bg, color: style.text }}
@@ -97,7 +91,7 @@ function HeroPhotoMosaic() {
                   className="w-full h-full object-cover scale-[1.02] group-hover:scale-[1.06] transition-transform duration-700"
                   draggable={false}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
                 <div
                   className="absolute top-3 left-3 px-2 py-0.5 font-mono text-[9px] font-bold tracking-widest uppercase"
                   style={{ background: style.bg, color: style.text }}
@@ -163,7 +157,7 @@ function HeroDesktopText({ tr }: { tr: Tr }) {
         <div className="flex items-center gap-3">
           <Link
             href="/discover"
-            className="inline-flex items-center gap-2.5 px-7 py-3.5 bg-siren text-cream font-display text-[13px] tracking-widest uppercase hover:bg-siren/90 active:scale-[0.97] transition-all duration-150 shadow-lg"
+            className="inline-flex items-center gap-2.5 px-7 py-3.5 bg-siren text-cream font-display text-[13px] tracking-widest uppercase hover:bg-siren/90 active:scale-[0.97] transition-all duration-150 shadow-lg shadow-siren/25"
           >
             {tr.findSpot}
             <ArrowUpRight className="w-3.5 h-3.5" strokeWidth={2.5} />
@@ -259,7 +253,7 @@ function HeroMobile({ tr }: { tr: Tr }) {
       >
         <Link
           href="/discover"
-          className="flex items-center justify-center gap-2 py-4 bg-siren text-cream font-display text-[13px] tracking-widest uppercase hover:bg-siren/90 active:scale-[0.98] transition-all"
+          className="flex items-center justify-center gap-2 py-4 bg-siren text-cream font-display text-[13px] tracking-widest uppercase hover:bg-siren/90 active:scale-[0.98] transition-all shadow-lg shadow-siren/25"
         >
           {tr.findSpot}
           <ArrowRight className="w-3.5 h-3.5" strokeWidth={2.5} />
@@ -336,7 +330,8 @@ function HeroMobile({ tr }: { tr: Tr }) {
           <div className="shrink-0 w-4" />
         </div>
         {/* Fade-out right edge */}
-        <div className="absolute right-0 top-0 bottom-0 w-14 bg-gradient-to-l from-ink to-transparent pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-14 pointer-events-none"
+          style={{ background: "linear-gradient(to left, #100C09, transparent)" }} />
       </motion.div>
     </div>
   );
@@ -363,33 +358,53 @@ export default function HomePage() {
       {/* ═══ HERO ══════════════════════════════════════════════════════════════ */}
       <section
         ref={heroRef}
-        className="relative bg-ink overflow-hidden"
-        style={{ minHeight: "100dvh" }}
+        className="relative overflow-hidden"
+        style={{ minHeight: "100dvh", background: "#100C09" }}
       >
-        {/* Background layers */}
-        <div className="absolute inset-0 pointer-events-none">
+        {/* ── Warm bokeh blobs ── */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div
+            className="absolute rounded-full"
+            style={{
+              width: 640, height: 480,
+              top: -120, right: -100,
+              background: "radial-gradient(circle, rgba(255,45,45,0.22) 0%, transparent 70%)",
+              filter: "blur(80px)",
+            }}
+          />
+          <div
+            className="absolute rounded-full"
+            style={{
+              width: 420, height: 360,
+              bottom: 80, left: 40,
+              background: "radial-gradient(circle, rgba(255,208,0,0.14) 0%, transparent 70%)",
+              filter: "blur(90px)",
+            }}
+          />
+          <div
+            className="absolute rounded-full"
+            style={{
+              width: 300, height: 280,
+              top: "45%", left: "38%",
+              background: "radial-gradient(circle, rgba(255,100,50,0.08) 0%, transparent 70%)",
+              filter: "blur(70px)",
+            }}
+          />
+          {/* Film grain overlay */}
+          <div
+            className="absolute inset-0 mix-blend-soft-light"
+            style={{
+              backgroundImage: GRAIN_BG,
+              backgroundRepeat: "repeat",
+              opacity: 0.45,
+            }}
+          />
+          {/* Edge vignette */}
           <div
             className="absolute inset-0"
             style={{
               background:
-                "radial-gradient(ellipse 70% 55% at 68% 6%, rgba(255,45,45,0.08) 0%, transparent 60%)," +
-                "radial-gradient(ellipse 55% 45% at 18% 92%, rgba(255,208,0,0.05) 0%, transparent 55%)",
-            }}
-          />
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "radial-gradient(ellipse 120% 100% at 50% 50%, transparent 38%, rgba(10,10,10,0.75) 100%)",
-            }}
-          />
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage:
-                "linear-gradient(rgba(255,252,242,0.028) 1px, transparent 1px)," +
-                "linear-gradient(90deg, rgba(255,252,242,0.028) 1px, transparent 1px)",
-              backgroundSize: "80px 80px",
+                "radial-gradient(ellipse 130% 110% at 50% 50%, transparent 30%, rgba(16,12,9,0.72) 100%)",
             }}
           />
         </div>
@@ -420,14 +435,14 @@ export default function HomePage() {
       </section>
 
       {/* ═══ HOW IT WORKS ══════════════════════════════════════════════════════ */}
-      <section className="py-16 md:py-28 px-6">
+      <section className="py-16 md:py-28 px-6 overflow-hidden">
         <div className="max-w-[1200px] mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
-            className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-14"
+            className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16"
           >
             <div>
               <p className="font-mono text-[10px] tracking-[3px] text-ink/35 uppercase mb-4">
@@ -446,28 +461,43 @@ export default function HomePage() {
             </Link>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 border border-border overflow-hidden">
+          {/* Editorial ghost-number steps — no white boxes */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-6">
             {[
-              { num: "01", title: tr.step1_title, body: tr.step1_body, accent: "bg-siren" },
-              { num: "02", title: tr.step2_title, body: tr.step2_body, accent: "bg-taxi"  },
-              { num: "03", title: tr.step3_title, body: tr.step3_body, accent: "bg-ink"   },
+              { num: "01", title: tr.step1_title, body: tr.step1_body, accent: "#FF2D2D" },
+              { num: "02", title: tr.step2_title, body: tr.step2_body, accent: "#FFD000" },
+              { num: "03", title: tr.step3_title, body: tr.step3_body, accent: "#0A0A0A" },
             ].map((step, i) => (
               <motion.div
                 key={step.num}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1, duration: 0.5 }}
-                className="bg-white p-8 md:p-10 flex flex-col gap-6 hover:bg-bone transition-colors duration-200 border-b md:border-b-0 md:border-r border-border last:border-0"
+                transition={{ delay: i * 0.12, duration: 0.55 }}
+                className="relative"
               >
-                <div className="flex items-center justify-between">
-                  <div className={`w-8 h-0.5 ${step.accent}`} />
-                  <span className="font-mono text-[11px] text-ink/25 tracking-widest">{step.num}</span>
+                {/* Ghost step number */}
+                <div
+                  className="font-display leading-none tracking-[-0.05em] select-none mb-3"
+                  style={{
+                    fontSize: "clamp(80px, 12vw, 130px)",
+                    color: "rgba(10,10,10,0.055)",
+                    marginTop: "-0.1em",
+                  }}
+                >
+                  {step.num}
                 </div>
-                <div>
-                  <h3 className="font-display text-[30px] md:text-[32px] tracking-[-0.02em] text-ink mb-3">{step.title}</h3>
-                  <p className="font-body text-[14px] md:text-[15px] text-ink/55 leading-relaxed">{step.body}</p>
-                </div>
+                {/* Accent bar */}
+                <div
+                  className="w-8 h-[2.5px] mb-5"
+                  style={{ background: step.accent }}
+                />
+                <h3 className="font-display text-[28px] md:text-[30px] tracking-[-0.02em] text-ink mb-3 leading-tight">
+                  {step.title}
+                </h3>
+                <p className="font-body text-[14px] md:text-[15px] text-ink/55 leading-relaxed">
+                  {step.body}
+                </p>
               </motion.div>
             ))}
           </div>
@@ -475,7 +505,7 @@ export default function HomePage() {
       </section>
 
       {/* ═══ VENUE GRID ════════════════════════════════════════════════════════ */}
-      <section className="bg-ink py-16 md:py-24 overflow-hidden">
+      <section className="py-16 md:py-24 overflow-hidden" style={{ background: "#100C09" }}>
         <div className="max-w-[1400px] mx-auto px-5 md:px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -525,7 +555,7 @@ export default function HomePage() {
                         className="w-full h-full object-cover absolute inset-0 transition-transform duration-700 group-hover:scale-[1.06]"
                         loading="lazy"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
                       <div
                         className="absolute top-3 left-3 px-2.5 py-1 text-[10px] font-mono font-bold tracking-wide"
                         style={{ background: style.bg, color: style.text }}
@@ -587,29 +617,34 @@ export default function HomePage() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.04 }}
-                    whileHover={{ y: -2 }}
+                    whileHover={{ y: -3, scale: 1.01 }}
                     whileTap={{ scale: 0.97 }}
                   >
                     <Link
                       href={`/discover?vibe=${encodeURIComponent(vibe)}`}
-                      className="flex flex-col justify-between h-28 p-4 md:p-5 transition-all duration-200 group"
+                      className="flex flex-col justify-between h-36 md:h-44 p-4 md:p-5 transition-all duration-200 group relative overflow-hidden"
                       style={{ background: style.bg }}
                     >
+                      {/* Subtle grain on vibe tiles */}
+                      <div
+                        className="absolute inset-0 mix-blend-soft-light pointer-events-none"
+                        style={{ backgroundImage: GRAIN_BG, backgroundRepeat: "repeat", opacity: 0.25 }}
+                      />
                       <span
-                        className="font-mono text-[10px] tracking-[2px] uppercase"
+                        className="font-mono text-[10px] tracking-[2px] uppercase relative z-10"
                         style={{ color: style.text, opacity: 0.5 }}
                       >
                         {count} spot{count !== 1 ? "s" : ""}
                       </span>
-                      <div className="flex items-end justify-between">
+                      <div className="flex items-end justify-between relative z-10">
                         <span
-                          className="font-display text-[18px] md:text-[20px] leading-tight tracking-[-0.01em]"
+                          className="font-display text-[20px] md:text-[22px] leading-tight tracking-[-0.01em]"
                           style={{ color: style.text }}
                         >
                           {vibe}
                         </span>
                         <ArrowUpRight
-                          className="w-4 h-4 opacity-0 group-hover:opacity-60 transition-opacity"
+                          className="w-4 h-4 opacity-0 group-hover:opacity-60 transition-opacity translate-x-0 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 duration-200"
                           style={{ color: style.text }}
                           strokeWidth={2.5}
                         />
@@ -633,11 +668,17 @@ export default function HomePage() {
           className="max-w-[1200px] mx-auto"
         >
           <div className="bg-siren px-6 py-14 sm:px-10 md:px-16 md:py-20 relative overflow-hidden">
+            {/* Grain texture on CTA (organic, not dots) */}
             <div
-              className="absolute inset-0 pointer-events-none opacity-[0.06]"
+              className="absolute inset-0 mix-blend-soft-light pointer-events-none"
+              style={{ backgroundImage: GRAIN_BG, backgroundRepeat: "repeat", opacity: 0.3 }}
+            />
+            {/* Subtle bokeh in corner */}
+            <div
+              className="absolute -right-20 -bottom-20 w-[400px] h-[350px] rounded-full pointer-events-none"
               style={{
-                backgroundImage: "radial-gradient(circle, #FFFCF2 1px, transparent 1px)",
-                backgroundSize: "28px 28px",
+                background: "radial-gradient(circle, rgba(255,208,0,0.18) 0%, transparent 70%)",
+                filter: "blur(60px)",
               }}
             />
             <div className="relative z-10 max-w-xl">
@@ -692,17 +733,26 @@ export default function HomePage() {
       </section>
 
       {/* ═══ FOOTER ════════════════════════════════════════════════════════════ */}
-      <footer className="border-t border-border py-8 px-6 bg-bone">
-        <div className="max-w-[1200px] mx-auto flex flex-col items-center gap-5 md:flex-row md:justify-between md:gap-4">
-          <span className="font-display text-[24px] tracking-[-0.04em] text-ink">
-            BAM<span className="text-siren">!</span>
-          </span>
-          <div className="flex flex-wrap justify-center gap-x-6 gap-y-1 font-mono text-[11px] text-ink/35 tracking-wide">
-            <a href="https://getbam.fun" className="hover:text-ink/60 transition-colors">getbam.fun</a>
-            <span>Athens, GR</span>
-            <Link href="/apply" className="hover:text-ink/60 transition-colors">List your venue</Link>
+      <footer style={{ background: "#100C09" }} className="py-12 px-6 relative overflow-hidden">
+        {/* Subtle grain in footer */}
+        <div
+          className="absolute inset-0 mix-blend-soft-light pointer-events-none"
+          style={{ backgroundImage: GRAIN_BG, backgroundRepeat: "repeat", opacity: 0.25 }}
+        />
+        <div className="max-w-[1200px] mx-auto relative z-10">
+          <div className="flex flex-col items-center gap-6 md:flex-row md:justify-between md:gap-4">
+            <span className="font-display text-[34px] tracking-[-0.04em] text-cream">
+              BAM<span className="text-siren">!</span>
+            </span>
+            <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 font-mono text-[11px] text-cream/30 tracking-wide">
+              <a href="https://getbam.fun" className="hover:text-cream/55 transition-colors">getbam.fun</a>
+              <span className="text-cream/15">·</span>
+              <span>Athens, GR</span>
+              <span className="text-cream/15">·</span>
+              <Link href="/apply" className="hover:text-cream/55 transition-colors">List your venue</Link>
+            </div>
+            <p className="font-mono text-[10px] text-cream/20 text-center">{tr.rights}</p>
           </div>
-          <p className="font-mono text-[11px] text-ink/30 text-center">{tr.rights}</p>
         </div>
       </footer>
     </div>
