@@ -5,7 +5,7 @@ import { MapPin, Bookmark } from "lucide-react";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import WaitlistModal from "@/components/waitlist-modal";
+import LaunchPopup from "@/components/launch-popup";
 import { cn } from "@/lib/utils";
 import type { Venue, Vibe } from "@/lib/types";
 import { useLang } from "@/contexts/lang-context";
@@ -67,7 +67,7 @@ export default function VenueCard({
 
   return (
     <>
-    {waitlistOpen && <WaitlistModal venue={venue} onClose={() => setWaitlistOpen(false)} />}
+    {waitlistOpen && <LaunchPopup open={waitlistOpen} onClose={() => setWaitlistOpen(false)} />}
     <motion.article
       layout
       initial={{ opacity: 0, y: 16 }}

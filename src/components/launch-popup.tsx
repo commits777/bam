@@ -7,24 +7,38 @@ import Link from "next/link";
 
 const STORAGE_KEY = "bam_launch_seen";
 
-export default function LaunchPopup() {
-  const [open, setOpen] = useState(false);
+interface LaunchPopupProps {
+  /** Controlled mode: pass open + onClose to use as a modal */
+  open?: boolean;
+  onClose?: () => void;
+}
+
+export default function LaunchPopup({ open: controlledOpen, onClose: controlledClose }: LaunchPopupProps) {
+  const [autoOpen, setAutoOpen] = useState(false);
+
+  const isControlled = controlledOpen !== undefined;
+  const visible = isControlled ? controlledOpen : autoOpen;
 
   useEffect(() => {
+    if (isControlled) return;
     if (typeof window === "undefined") return;
     if (localStorage.getItem(STORAGE_KEY)) return;
-    const t = setTimeout(() => setOpen(true), 900);
+    const t = setTimeout(() => setAutoOpen(true), 900);
     return () => clearTimeout(t);
-  }, []);
+  }, [isControlled]);
 
   function dismiss() {
-    localStorage.setItem(STORAGE_KEY, "1");
-    setOpen(false);
+    if (isControlled) {
+      controlledClose?.();
+    } else {
+      localStorage.setItem(STORAGE_KEY, "1");
+      setAutoOpen(false);
+    }
   }
 
   return (
     <AnimatePresence>
-      {open && (
+      {visible && (
         <motion.div
           key="launch-backdrop"
           initial={{ opacity: 0 }}
@@ -33,6 +47,7 @@ export default function LaunchPopup() {
           transition={{ duration: 0.25 }}
           className="fixed inset-0 z-[80] flex items-center justify-center p-5"
           style={{ backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)", background: "rgba(10,10,10,0.55)" }}
+          onClick={dismiss}
         >
           <motion.div
             key="launch-card"
@@ -41,6 +56,7 @@ export default function LaunchPopup() {
             exit={{ opacity: 0, y: 16, scale: 0.97 }}
             transition={{ type: "spring", damping: 24, stiffness: 260, mass: 0.9 }}
             className="relative w-full max-w-lg bg-cream overflow-hidden shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
           >
             {/* Siren bar top */}
             <div className="h-1.5 bg-siren w-full" />

@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import type { Venue, Vibe } from "@/lib/types";
 import { useLang } from "@/contexts/lang-context";
 import { t } from "@/lib/i18n";
-import WaitlistModal from "@/components/waitlist-modal";
+import LaunchPopup from "@/components/launch-popup";
 
 interface VenueSheetProps {
   venue: Venue | null;
@@ -123,7 +123,7 @@ function SheetBody({
 
   return (
     <>
-    {waitlistOpen && <WaitlistModal venue={venue} onClose={() => setWaitlistOpen(false)} />}
+    {waitlistOpen && <LaunchPopup open={waitlistOpen} onClose={() => setWaitlistOpen(false)} />}
     <div className="flex flex-col pb-8">
       {/* Hero image — no radius, flush to edges */}
       <div className="relative h-64 mx-4 mt-2 overflow-hidden bg-bone shrink-0">

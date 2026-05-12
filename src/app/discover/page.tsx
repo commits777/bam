@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { LayoutGrid, Map as MapIcon, X, ArrowUpRight } from "lucide-react";
 import Nav from "@/components/nav";
+import LaunchPopup from "@/components/launch-popup";
 import FilterBar from "@/components/filter-bar";
 import VenueCard from "@/components/venue-card";
 import VenueSheet from "@/components/venue-sheet";
@@ -92,6 +93,7 @@ function DiscoverInner() {
 
   return (
     <div className="flex flex-col h-[100dvh] overflow-hidden bg-cream">
+      <LaunchPopup />
       <Nav />
       <FilterBar filters={filters} onChange={setFilters} resultCount={filtered.length} />
 
