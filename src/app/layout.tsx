@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
 
   title: {
-    default: "BAM! | Date Night in Athens, Handled.",
+    default: "BAM! | Date Night in Athens, Sorted.",
     template: "%s | BAM!",
   },
   description:
@@ -82,7 +82,7 @@ export const metadata: Metadata = {
 
   // Open Graph
   openGraph: {
-    title: "BAM! | Date Night in Athens, Handled.",
+    title: "BAM! | Date Night in Athens, Sorted.",
     description:
       "50 curated date night spots in Athens. Wine bars, rooftops, jazz clubs and cocktail bars, hand-picked for couples.",
     url: BASE_URL,
@@ -104,7 +104,7 @@ export const metadata: Metadata = {
   // Twitter / X
   twitter: {
     card: "summary_large_image",
-    title: "BAM! | Date Night in Athens, Handled.",
+    title: "BAM! | Date Night in Athens, Sorted.",
     description: "50 curated date night spots in Athens. Tap. Book. Go.",
     images: ["/og.png"],
     creator: "@getbamfun",

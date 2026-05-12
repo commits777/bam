@@ -150,7 +150,7 @@ function HeroDesktopText({ tr }: { tr: Tr }) {
           className="font-display text-cream/70 leading-[1.1] tracking-[-0.025em] mb-8"
           style={{ fontSize: "clamp(22px, 2.2vw, 30px)" }}
         >
-          Date night in Athens,<br />handled.
+          Date night in Athens,<br />sorted.
         </p>
 
         {/* Descriptor */}
@@ -236,7 +236,7 @@ function HeroMobile({ tr }: { tr: Tr }) {
           animate={{ y: 0 }}
           transition={{ duration: 0.72, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
         >
-          Date night in Athens,<br />handled.
+          Date night in Athens,<br />sorted.
         </motion.p>
       </div>
 
