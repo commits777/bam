@@ -363,31 +363,34 @@ export default function HomePage() {
       >
         {/* ── Warm bokeh blobs ── */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {/* Big siren-red glow — top right */}
           <div
-            className="absolute rounded-full"
+            className="absolute"
             style={{
-              width: 640, height: 480,
-              top: -120, right: -100,
-              background: "radial-gradient(circle, rgba(255,45,45,0.22) 0%, transparent 70%)",
-              filter: "blur(80px)",
+              width: 800, height: 600,
+              top: -200, right: -180,
+              background: "radial-gradient(circle at 40% 40%, rgba(255,45,45,0.55) 0%, rgba(200,20,20,0.2) 40%, transparent 70%)",
+              filter: "blur(60px)",
             }}
           />
+          {/* Taxi-yellow glow — bottom left */}
           <div
-            className="absolute rounded-full"
+            className="absolute"
             style={{
-              width: 420, height: 360,
-              bottom: 80, left: 40,
-              background: "radial-gradient(circle, rgba(255,208,0,0.14) 0%, transparent 70%)",
-              filter: "blur(90px)",
-            }}
-          />
-          <div
-            className="absolute rounded-full"
-            style={{
-              width: 300, height: 280,
-              top: "45%", left: "38%",
-              background: "radial-gradient(circle, rgba(255,100,50,0.08) 0%, transparent 70%)",
+              width: 560, height: 480,
+              bottom: -60, left: -80,
+              background: "radial-gradient(circle at 60% 60%, rgba(255,208,0,0.38) 0%, rgba(255,160,0,0.12) 45%, transparent 70%)",
               filter: "blur(70px)",
+            }}
+          />
+          {/* Warm amber mid-glow */}
+          <div
+            className="absolute"
+            style={{
+              width: 400, height: 360,
+              top: "35%", left: "30%",
+              background: "radial-gradient(circle, rgba(255,90,30,0.18) 0%, transparent 65%)",
+              filter: "blur(55px)",
             }}
           />
           {/* Film grain overlay */}
@@ -396,15 +399,15 @@ export default function HomePage() {
             style={{
               backgroundImage: GRAIN_BG,
               backgroundRepeat: "repeat",
-              opacity: 0.45,
+              opacity: 0.6,
             }}
           />
-          {/* Edge vignette */}
+          {/* Dark edge vignette to keep text readable */}
           <div
             className="absolute inset-0"
             style={{
               background:
-                "radial-gradient(ellipse 130% 110% at 50% 50%, transparent 30%, rgba(16,12,9,0.72) 100%)",
+                "radial-gradient(ellipse 140% 120% at 50% 50%, transparent 20%, rgba(16,12,9,0.65) 100%)",
             }}
           />
         </div>
