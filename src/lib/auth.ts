@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import GitHub from "next-auth/providers/github";
+import Google from "next-auth/providers/google";
 import { prisma } from "@/lib/prisma";
 
 /* ── Custom Instagram provider ──────────────────────────────
@@ -53,9 +54,11 @@ const Instagram = {
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
   providers: [
-    // Phase 2: Instagram OAuth (handle: ian_g477)
-    // Uncomment when Meta developer app is approved:
-    // Instagram,
+    Instagram,
+    Google({
+      clientId: process.env.AUTH_GOOGLE_ID!,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET!,
+    }),
     GitHub({
       clientId: process.env.AUTH_GITHUB_ID!,
       clientSecret: process.env.AUTH_GITHUB_SECRET!,
@@ -67,6 +70,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         session.user.id = user.id;
         session.user.role = (user as { role?: string }).role ?? "user";
         session.user.bio = (user as { bio?: string }).bio ?? null;
+        session.user.instagram = (user as { instagram?: string }).instagram ?? null;
       }
       return session;
     },
@@ -98,6 +102,7 @@ declare module "next-auth" {
       image?: string | null;
       role?: string;
       bio?: string | null;
+      instagram?: string | null;
     };
   }
 }

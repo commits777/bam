@@ -133,7 +133,7 @@ export const VENUES: Venue[] = [
   },
   {
     id: "roof-garden",
-    name: "Roof Garden — King George",
+    name: "Roof Garden at King George",
     tagline: "Rooftop dining above Syntagma. The city lit up below you.",
     neighborhood: "Kolonaki",
     vibe: "Rooftop",
@@ -231,7 +231,7 @@ export const VENUES: Venue[] = [
   {
     id: "athinais",
     name: "Athinais",
-    tagline: "Industrial cultural space — catch a screening or just drink in the courtyard.",
+    tagline: "Industrial cultural space. Catch a screening or just drink in the courtyard.",
     neighborhood: "Petralona",
     vibe: "Experience",
     budget: "€€",

@@ -160,7 +160,7 @@ export default function ApplyPage() {
                 </div>
 
                 {status === "error" && (
-                  <p className="font-mono text-[11px] text-siren">Something went wrong — try again.</p>
+                  <p className="font-mono text-[11px] text-siren">Something went wrong. Please try again.</p>
                 )}
 
                 <button

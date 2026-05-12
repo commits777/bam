@@ -47,7 +47,7 @@ export default function EmailSignInPage() {
               <p className="font-mono text-[10px] tracking-[3px] text-cream/35 uppercase mb-1">Email</p>
               <h1 className="font-display text-[24px] text-cream tracking-[-0.02em] mb-1.5">Log in with email</h1>
               <p className="font-body text-[13px] text-cream/45 mb-7 leading-relaxed">
-                We'll send a magic link — no password needed.
+                We'll send a magic link. No password needed.
               </p>
               <form onSubmit={handleSubmit} className="flex flex-col gap-3">
                 <input
