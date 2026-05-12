@@ -2,8 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 const LAUNCH_DATE = process.env.NEXT_PUBLIC_LAUNCH_DATE ?? "soon";
+
+function getResend() {
+  const key = process.env.RESEND_API_KEY;
+  if (!key || key.startsWith("REPLACE")) return null;
+  return new Resend(key);
+}
 
 export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => null);
@@ -38,7 +43,8 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  if (process.env.RESEND_API_KEY) {
+  const resend = getResend();
+  if (resend) {
     await resend.emails.send({
       from: "BAM! <hello@getbam.fun>",
       to: email,
