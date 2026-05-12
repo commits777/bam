@@ -69,3 +69,17 @@ model SavedVenue {
 
   @@unique([userId, venueId])
 }
+
+model WaitlistSignup {
+  id           String   @id @default(cuid())
+  email        String
+  venueId      String
+  venueName    String
+  neighborhood String
+  utmSource    String?
+  utmMedium    String?
+  utmCampaign  String?
+  createdAt    DateTime @default(now())
+
+  @@unique([email, venueId])
+}

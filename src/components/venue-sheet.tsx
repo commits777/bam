@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import type { Venue, Vibe } from "@/lib/types";
 import { useLang } from "@/contexts/lang-context";
 import { t } from "@/lib/i18n";
+import WaitlistModal from "@/components/waitlist-modal";
 
 interface VenueSheetProps {
   venue: Venue | null;
@@ -89,6 +90,7 @@ function SheetBody({
   const { data: session } = useSession();
   const router = useRouter();
   const [saving, setSaving] = useState(false);
+  const [waitlistOpen, setWaitlistOpen] = useState(false);
   const { lang } = useLang();
   const tr = t[lang];
   const isSaved = savedVenueIds.includes(venue.id);
@@ -119,11 +121,9 @@ function SheetBody({
     }
   }
 
-  function handleBook(e: React.MouseEvent) {
-    if (!session) { e.preventDefault(); router.push("/auth/signin"); }
-  }
-
   return (
+    <>
+    {waitlistOpen && <WaitlistModal venue={venue} onClose={() => setWaitlistOpen(false)} />}
     <div className="flex flex-col pb-8">
       {/* Hero image — no radius, flush to edges */}
       <div className="relative h-64 mx-4 mt-2 overflow-hidden bg-bone shrink-0">
@@ -228,16 +228,13 @@ function SheetBody({
 
         {/* CTAs */}
         <div className="flex flex-col gap-2">
-          <a
-            href={venue.bookingUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={handleBook}
+          <button
+            onClick={() => setWaitlistOpen(true)}
             className="group flex items-center justify-center gap-2 w-full py-4 rounded-sm bg-siren text-cream font-display text-lg tracking-wide hover:bg-siren/90 active:scale-[0.98] transition-all duration-150"
           >
             {tr.bookIt}
             <ArrowUpRight className="w-5 h-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" strokeWidth={2.5} />
-          </a>
+          </button>
 
           <div className="flex gap-2">
             <button
@@ -260,13 +257,9 @@ function SheetBody({
             </button>
           </div>
 
-          {!session && (
-            <p className="text-center font-mono text-[10px] text-ink/35 tracking-wide mt-1">
-              {tr.signInToBook}
-            </p>
-          )}
         </div>
       </div>
     </div>
+    </>
   );
 }

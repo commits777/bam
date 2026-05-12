@@ -211,18 +211,24 @@ export default function HomePage() {
 
       {/* ═══ HERO ════════════════════════════════════════════ */}
       <section ref={heroRef} className="relative bg-ink overflow-hidden" style={{ minHeight: "100dvh" }}>
-        {/* Background photo */}
+        {/* CSS background — no photo, brand-consistent depth */}
         <div className="absolute inset-0">
-          <img
-            src="https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=1800&auto=format&q=80"
-            alt=""
-            className="w-full h-full object-cover object-center"
-            aria-hidden
+          {/* Warm radial depth — top-right anchor */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(ellipse 80% 60% at 72% 8%, rgba(255,45,45,0.07) 0%, transparent 60%), radial-gradient(ellipse 60% 50% at 20% 90%, rgba(255,208,0,0.04) 0%, transparent 55%)",
+            }}
           />
-          {/* Multi-layer overlay for depth */}
-          <div className="absolute inset-0 bg-ink/75" />
-          <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-ink/20" />
-          <div className="absolute inset-0 bg-gradient-to-r from-ink/60 via-transparent to-ink/20" />
+          {/* Vignette edges */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(ellipse 120% 100% at 50% 50%, transparent 40%, rgba(10,10,10,0.7) 100%)",
+            }}
+          />
         </div>
 
         {/* Grid texture on top */}

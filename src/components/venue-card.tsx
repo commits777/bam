@@ -1,10 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { MapPin, ExternalLink, Bookmark } from "lucide-react";
+import { MapPin, Bookmark } from "lucide-react";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import WaitlistModal from "@/components/waitlist-modal";
 import { cn } from "@/lib/utils";
 import type { Venue, Vibe } from "@/lib/types";
 import { useLang } from "@/contexts/lang-context";
@@ -41,6 +42,7 @@ export default function VenueCard({
   const { data: session } = useSession();
   const router = useRouter();
   const [saving, setSaving] = useState(false);
+  const [waitlistOpen, setWaitlistOpen] = useState(false);
   const { lang } = useLang();
   const tr = t[lang];
   const isSaved = savedVenueIds.includes(venue.id);
@@ -64,6 +66,8 @@ export default function VenueCard({
   }
 
   return (
+    <>
+    {waitlistOpen && <WaitlistModal venue={venue} onClose={() => setWaitlistOpen(false)} />}
     <motion.article
       layout
       initial={{ opacity: 0, y: 16 }}
@@ -138,23 +142,17 @@ export default function VenueCard({
             </span>
           </div>
 
-          <motion.a
-            href={venue.bookingUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => {
-              e.stopPropagation();
-              if (!session) { e.preventDefault(); router.push("/auth/signin"); }
-            }}
+          <motion.button
+            onClick={(e) => { e.stopPropagation(); setWaitlistOpen(true); }}
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
             className="flex items-center gap-1 shrink-0 px-3 py-1.5 rounded-sm bg-siren text-cream text-[11px] font-display tracking-wide hover:bg-siren/90 transition-colors"
           >
             {tr.bookIt}
-            <ExternalLink className="w-2.5 h-2.5" strokeWidth={2.5} />
-          </motion.a>
+          </motion.button>
         </div>
       </div>
     </motion.article>
+    </>
   );
 }

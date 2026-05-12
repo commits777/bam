@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import Google from "next-auth/providers/google";
+import GitHub from "next-auth/providers/github";
 import { prisma } from "@/lib/prisma";
 
 /* ── Custom Instagram provider ──────────────────────────────
@@ -53,10 +53,12 @@ const Instagram = {
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
   providers: [
-    Instagram,
-    Google({
-      clientId: process.env.AUTH_GOOGLE_ID!,
-      clientSecret: process.env.AUTH_GOOGLE_SECRET!,
+    // Phase 2: Instagram OAuth (handle: ian_g477)
+    // Uncomment when Meta developer app is approved:
+    // Instagram,
+    GitHub({
+      clientId: process.env.AUTH_GITHUB_ID!,
+      clientSecret: process.env.AUTH_GITHUB_SECRET!,
     }),
   ],
   callbacks: {
@@ -68,10 +70,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
       return session;
     },
-    async signIn({ user }) {
-      if (user.email === process.env.ADMIN_EMAIL) {
+    async signIn({ user, profile }) {
+      const isAdminEmail = user.email === process.env.ADMIN_EMAIL;
+      // Phase 2: also grant admin to Instagram handle ian_g477
+      const isAdminInstagram =
+        (profile as { username?: string } | undefined)?.username === "ian_g477";
+
+      if (isAdminEmail || isAdminInstagram) {
         await prisma.user
-          .update({ where: { email: user.email }, data: { role: "admin" } })
+          .update({ where: { email: user.email! }, data: { role: "admin" } })
           .catch(() => {});
       }
       return true;
