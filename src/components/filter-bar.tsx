@@ -43,7 +43,7 @@ export default function FilterBar({ filters, onChange, resultCount }: FilterBarP
   }
 
   function clearAll() {
-    onChange({ neighborhood: null, vibe: null, budget: null, occasion: null });
+    onChange({ neighborhood: null, vibe: null, budget: null, occasion: null, openNow: false, walk: null });
   }
 
   function getLabel(cat: Category): string {
