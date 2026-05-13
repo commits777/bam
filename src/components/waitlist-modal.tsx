@@ -135,7 +135,7 @@ export default function WaitlistModal({ venue, onClose }: WaitlistModalProps) {
 
                 {state === "error" && (
                   <p className="mt-3 font-mono text-[11px] text-siren">
-                    Something went wrong — try again.
+                    Something went wrong. Please try again.
                   </p>
                 )}
               </>

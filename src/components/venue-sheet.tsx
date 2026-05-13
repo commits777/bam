@@ -1,14 +1,12 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { X, MapPin, Tag, Bookmark, Share2, ArrowUpRight } from "lucide-react";
+import { X } from "lucide-react";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import type { Venue, Vibe } from "@/lib/types";
-import { useLang } from "@/contexts/lang-context";
-import { t } from "@/lib/i18n";
-import LaunchPopup from "@/components/launch-popup";
+import type { Venue } from "@/lib/types";
+import { NEIGHBORHOOD_GR } from "@/lib/venues";
 
 interface VenueSheetProps {
   venue: Venue | null;
@@ -17,22 +15,22 @@ interface VenueSheetProps {
   onSaveToggle?: (venueId: string, saved: boolean) => void;
 }
 
-const VIBE_STYLES: Record<Vibe, { bg: string; text: string }> = {
-  "Wine Bar":     { bg: "#0A0A0A", text: "#FFD000" },
-  "Cocktail Bar": { bg: "#FF2D2D", text: "#FFFCF2" },
-  "Dinner":       { bg: "#FFFCF2", text: "#0A0A0A" },
-  "Rooftop":      { bg: "#FFD000", text: "#0A0A0A" },
-  "Jazz Club":    { bg: "#0A0A0A", text: "#FFFCF2" },
-  "Activity":     { bg: "#F5F1E8", text: "#0A0A0A" },
-  "Comedy":       { bg: "#FFD000", text: "#0A0A0A" },
-  "Experience":   { bg: "#FF2D2D", text: "#FFD000" },
-};
+// ─── BAM stamp with leading dot ───────────────────────────────────────────────
+function Stamp({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="inline-flex items-center gap-2 font-mono text-[10px] tracking-[0.18em] uppercase font-bold text-siren">
+      <span className="w-[7px] h-[7px] rounded-full bg-siren shrink-0" />
+      {children}
+    </span>
+  );
+}
 
 export default function VenueSheet({ venue, onClose, savedVenueIds = [], onSaveToggle }: VenueSheetProps) {
   return (
     <AnimatePresence>
       {venue && (
         <>
+          {/* Backdrop (mobile) */}
           <motion.div
             key="backdrop"
             initial={{ opacity: 0 }}
@@ -40,7 +38,8 @@ export default function VenueSheet({ venue, onClose, savedVenueIds = [], onSaveT
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={onClose}
-            className="fixed inset-0 bg-ink/40 backdrop-blur-[3px] z-50 lg:hidden"
+            className="fixed inset-0 bg-ink/40 z-50 lg:hidden"
+            style={{ backdropFilter: "blur(3px)" }}
           />
 
           {/* Mobile — slides up from bottom */}
@@ -50,11 +49,10 @@ export default function VenueSheet({ venue, onClose, savedVenueIds = [], onSaveT
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 300, mass: 0.8 }}
-            className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-cream rounded-t-sm shadow-2xl max-h-[92dvh] overflow-y-auto"
+            className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-cream rounded-t-[18px] shadow-2xl max-h-[92dvh] overflow-y-auto"
           >
-            {/* Drag handle */}
             <div className="flex justify-center pt-3 pb-1">
-              <div className="w-10 h-1 bg-ink/15" />
+              <div className="w-10 h-1 bg-ink/15 rounded-full" />
             </div>
             <SheetBody venue={venue} onClose={onClose} savedVenueIds={savedVenueIds} onSaveToggle={onSaveToggle} />
           </motion.div>
@@ -62,11 +60,11 @@ export default function VenueSheet({ venue, onClose, savedVenueIds = [], onSaveT
           {/* Desktop — slides in from right */}
           <motion.div
             key="sheet-desktop"
-            initial={{ x: 340, opacity: 0 }}
+            initial={{ x: 400, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            exit={{ x: 340, opacity: 0 }}
+            exit={{ x: 400, opacity: 0 }}
             transition={{ type: "spring", damping: 28, stiffness: 260, mass: 0.9 }}
-            className="hidden lg:flex fixed top-[104px] right-0 bottom-0 w-[360px] z-40 bg-cream border-l border-border shadow-2xl flex-col overflow-y-auto"
+            className="hidden lg:flex fixed top-[56px] right-0 bottom-0 w-[400px] z-40 bg-cream border-l border-border shadow-2xl flex-col overflow-y-auto"
           >
             <SheetBody venue={venue} onClose={onClose} savedVenueIds={savedVenueIds} onSaveToggle={onSaveToggle} />
           </motion.div>
@@ -90,13 +88,15 @@ function SheetBody({
   const { data: session } = useSession();
   const router = useRouter();
   const [saving, setSaving] = useState(false);
-  const [waitlistOpen, setWaitlistOpen] = useState(false);
-  const { lang } = useLang();
-  const tr = t[lang];
+  const [imgIdx, setImgIdx] = useState(0);
   const isSaved = savedVenueIds.includes(venue.id);
-  const style = VIBE_STYLES[venue.vibe] ?? { bg: "#0A0A0A", text: "#FFFCF2" };
+  const nhGr = NEIGHBORHOOD_GR[venue.neighborhood] ?? venue.neighborhood;
 
-  async function handleSave() {
+  // Photos array — use the single image repeated if no multi-photo set
+  const photos = [venue.image];
+
+  async function handleSave(e: React.MouseEvent) {
+    e.stopPropagation();
     if (!session) { router.push("/auth/signin"); return; }
     setSaving(true);
     try {
@@ -112,7 +112,17 @@ function SheetBody({
     }
   }
 
-  function handleShare() {
+  function handleBook(e: React.MouseEvent) {
+    e.stopPropagation();
+    if (!session) {
+      router.push("/auth/signin");
+      return;
+    }
+    window.open(venue.bookingUrl, "_blank", "noopener,noreferrer");
+  }
+
+  function handleShare(e: React.MouseEvent) {
+    e.stopPropagation();
     if (!session) { router.push("/auth/signin"); return; }
     if (navigator.share) {
       navigator.share({ title: venue.name, text: venue.tagline, url: window.location.href });
@@ -122,144 +132,163 @@ function SheetBody({
   }
 
   return (
-    <>
-    {waitlistOpen && <LaunchPopup open={waitlistOpen} onClose={() => setWaitlistOpen(false)} />}
-    <div className="flex flex-col pb-8">
-      {/* Hero image — no radius, flush to edges */}
-      <div className="relative h-64 mx-4 mt-2 overflow-hidden bg-bone shrink-0">
-        <img src={venue.image} alt={venue.name} className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-
-        <button
-          onClick={onClose}
-          className="absolute top-3 right-3 w-8 h-8 rounded-sm bg-ink/50 backdrop-blur-sm flex items-center justify-center hover:bg-ink/70 transition-colors"
-        >
-          <X className="w-4 h-4 text-cream" strokeWidth={2.5} />
-        </button>
-
-        {/* Vibe tag — consistent with card */}
-        <div
-          className="absolute bottom-3 left-3 px-2.5 py-1 text-[10px] font-mono font-bold tracking-wide"
-          style={{ background: style.bg, color: style.text }}
-        >
-          {venue.vibe}
+    <div className="flex flex-col pb-6">
+      {/* Hero image */}
+      <div className="relative">
+        <div className="relative aspect-[4/3] overflow-hidden bg-bone">
+          <img
+            src={photos[imgIdx]}
+            alt={venue.name}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
         </div>
 
-        {venue.sponsored && (
-          <div className="absolute top-3 left-3 px-2 py-0.5 bg-taxi text-[9px] font-mono font-bold text-ink tracking-wider uppercase">
-            Featured
-          </div>
-        )}
-      </div>
-
-      {/* Content */}
-      <div className="px-5 pt-5 flex flex-col gap-5">
-        {/* Header */}
-        <div>
-          <div className="flex items-start justify-between gap-3">
-            <h2 className="font-display text-[26px] leading-[1.05] tracking-[-0.02em] text-ink">
-              {venue.name}
-            </h2>
-            <span className="font-mono text-xl text-ink/35 mt-1 shrink-0">{venue.budget}</span>
-          </div>
-          <div className="flex items-center gap-1.5 mt-1.5">
-            <MapPin className="w-3.5 h-3.5 text-ink/40" strokeWidth={2} />
-            <span className="font-mono text-[12px] text-ink/50">
-              {venue.neighborhood}
-              {venue.walkMin && ` · ${venue.walkMin} ${tr.walkMin}`}
-            </span>
-          </div>
-        </div>
-
-        {/* Tagline */}
-        <p className="text-[15px] text-ink/65 leading-relaxed border-l-2 border-siren pl-3">
-          {venue.tagline}
-        </p>
-
-        {/* Tags */}
-        {venue.tags && (
-          <div className="flex flex-wrap gap-1.5">
-            {venue.tags.map((tag) => (
-              <span
-                key={tag}
-                className="flex items-center gap-1 px-2.5 py-1 bg-bone text-[11px] font-mono text-ink/55 border border-border"
-              >
-                <Tag className="w-2.5 h-2.5" strokeWidth={2} />
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
-
-        {/* Occasions */}
-        <div>
-          <p className="text-[10px] font-mono text-ink/35 tracking-[2px] uppercase mb-2.5">
-            {tr.perfectFor}
-          </p>
-          <div className="flex flex-wrap gap-1.5">
-            {venue.occasions.map((o) => (
-              <span
-                key={o}
-                className="px-3 py-1.5 bg-ink text-taxi text-[10px] font-mono font-bold tracking-wide"
-              >
-                {o}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* Meta row */}
-        <div className="flex items-center gap-4 py-4 border-t border-b border-border">
-          <div>
-            <p className="text-[10px] font-mono text-ink/35 tracking-[2px] uppercase mb-1">{tr.via}</p>
-            <p className="font-mono text-[13px] text-ink/70">{venue.bookingPartner}</p>
-          </div>
-          <div className="w-px h-8 bg-border" />
-          <div>
-            <p className="text-[10px] font-mono text-ink/35 tracking-[2px] uppercase mb-1">{tr.vibe}</p>
-            <p className="font-display text-[15px] text-ink">{venue.vibe}</p>
-          </div>
-          <div className="w-px h-8 bg-border" />
-          <div>
-            <p className="text-[10px] font-mono text-ink/35 tracking-[2px] uppercase mb-1">{tr.price}</p>
-            <p className="font-mono text-[15px] text-ink">{venue.budget}</p>
-          </div>
-        </div>
-
-        {/* CTAs */}
-        <div className="flex flex-col gap-2">
+        {/* Floating action buttons */}
+        <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
           <button
-            onClick={() => setWaitlistOpen(true)}
-            className="group flex items-center justify-center gap-2 w-full py-4 rounded-sm bg-siren text-cream font-display text-lg tracking-wide hover:bg-siren/90 active:scale-[0.98] transition-all duration-150"
+            onClick={onClose}
+            className="w-10 h-10 rounded-full bg-cream shadow-[0_2px_8px_rgba(0,0,0,0.18)] flex items-center justify-center font-display text-[18px] text-ink hover:bg-bone transition-colors"
           >
-            {tr.bookIt}
-            <ArrowUpRight className="w-5 h-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" strokeWidth={2.5} />
+            ←
           </button>
-
           <div className="flex gap-2">
             <button
               onClick={handleSave}
               disabled={saving}
-              className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-sm border border-border text-[13px] font-body font-semibold text-ink/60 hover:bg-bone hover:text-ink transition-all"
+              className={`w-10 h-10 rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.18)] flex items-center justify-center font-display text-[16px] transition-colors ${
+                isSaved ? "bg-siren text-taxi" : "bg-cream text-ink hover:bg-bone"
+              }`}
             >
-              <Bookmark
-                className={isSaved ? "w-4 h-4 fill-siren text-siren" : "w-4 h-4"}
-                strokeWidth={2}
-              />
-              {isSaved ? tr.saved : tr.save}
+              {isSaved ? "★" : "☆"}
             </button>
             <button
               onClick={handleShare}
-              className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-sm border border-border text-[13px] font-body font-semibold text-ink/60 hover:bg-bone hover:text-ink transition-all"
+              className="w-10 h-10 rounded-full bg-cream shadow-[0_2px_8px_rgba(0,0,0,0.18)] flex items-center justify-center font-mono text-[13px] font-bold text-ink hover:bg-bone transition-colors"
             >
-              <Share2 className="w-4 h-4" strokeWidth={2} />
-              {tr.share}
+              ↗
             </button>
           </div>
-
         </div>
+
+        {/* BAM № stamp floating below hero */}
+        {venue.no && (
+          <div className="absolute bottom-[-22px] left-[18px] bg-cream px-3.5 py-2.5 rounded-lg shadow-[0_4px_12px_rgba(0,0,0,0.12)]">
+            <span className="inline-flex items-baseline gap-1 font-mono text-[10px] tracking-[0.18em] uppercase font-bold">
+              <span className="opacity-60">BAM</span>
+              <span className="text-siren">!</span>
+              <span>{String(venue.no).padStart(2, "0")}</span>
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Body */}
+      <div className="px-[22px] pt-10 flex flex-col gap-5">
+        {/* Vibe tags + open status */}
+        <div className="flex flex-wrap gap-1.5">
+          <span className="font-mono text-[10px] tracking-[0.15em] uppercase font-bold px-2.5 py-1.5 rounded-full bg-ink text-taxi">
+            {venue.vibe}
+          </span>
+          {venue.openNow !== undefined && (
+            <span className={`font-mono text-[10px] tracking-[0.15em] uppercase font-bold px-2.5 py-1.5 rounded-full border-[1.5px] ${
+              venue.openNow ? "border-siren text-siren" : "border-border text-ink/45"
+            }`}>
+              {venue.openNow ? "● OPEN NOW" : "○ CLOSED"}
+            </span>
+          )}
+        </div>
+
+        {/* Name */}
+        <h1 className="font-display text-[46px] leading-[0.95] tracking-[-0.03em] text-ink">
+          {venue.name}
+        </h1>
+
+        {/* Why pull-quote */}
+        <p className="text-[20px] leading-[1.3] font-medium text-ink border-l-[4px] border-siren pl-3.5">
+          &ldquo;{venue.tagline}&rdquo;
+        </p>
+
+        {/* BAM Notes */}
+        {venue.note && (
+          <div className="bg-bone rounded-[10px] px-[18px] py-[18px]">
+            <Stamp>BAM NOTES</Stamp>
+            <p className="mt-2.5 text-[15px] leading-[1.5] text-ink/70">{venue.note}</p>
+          </div>
+        )}
+
+        {/* Meta grid — 2×2 */}
+        <div className="border border-border rounded-[10px] overflow-hidden">
+          <div className="grid grid-cols-2">
+            <div className="p-3.5 border-r border-b border-border">
+              <p className="font-mono text-[10px] tracking-[0.15em] uppercase text-ink/45 font-bold mb-1.5">HOOD</p>
+              <p className="font-display text-[18px] leading-tight tracking-[-0.01em]">{nhGr}</p>
+              <p className="text-[12px] text-ink/45">{venue.neighborhood}</p>
+            </div>
+            <div className="p-3.5 border-b border-border">
+              <p className="font-mono text-[10px] tracking-[0.15em] uppercase text-ink/45 font-bold mb-1.5">WALK</p>
+              <p className="font-display text-[18px] leading-tight tracking-[-0.01em]">{venue.walkMin ?? "—"} min</p>
+              <p className="text-[12px] text-ink/45">from you</p>
+            </div>
+            <div className="p-3.5 border-r border-border">
+              <p className="font-mono text-[10px] tracking-[0.15em] uppercase text-ink/45 font-bold mb-1.5">BUDGET</p>
+              <p className="font-display text-[18px] leading-tight tracking-[-0.01em]">{venue.budget}</p>
+              <p className="text-[12px] text-ink/45">per head</p>
+            </div>
+            <div className="p-3.5">
+              <p className="font-mono text-[10px] tracking-[0.15em] uppercase text-ink/45 font-bold mb-1.5">HOURS</p>
+              <p className="font-display text-[18px] leading-tight tracking-[-0.01em]">
+                {venue.hours ? venue.hours.split(" ")[0] : "—"}
+              </p>
+              <p className="text-[12px] text-ink/45">
+                {venue.hours ? `til ${venue.hours.split(" ").pop()}` : "check online"}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Partner + address */}
+        <div className="flex items-center gap-2 text-[13px] text-ink/45 font-mono">
+          <span className="tracking-[0.1em] uppercase font-bold text-ink/35">VIA</span>
+          <span className="font-display text-[15px] text-ink">{venue.bookingPartner}</span>
+          {venue.neighborhood && (
+            <>
+              <span>·</span>
+              <span>{venue.neighborhood}</span>
+            </>
+          )}
+        </div>
+
+        {/* Occasions */}
+        {venue.occasions.length > 0 && (
+          <div className="flex flex-wrap gap-1.5">
+            {venue.occasions.map((o) => (
+              <span key={o} className="font-mono text-[10px] tracking-[0.1em] uppercase font-bold px-3 py-1.5 bg-ink text-taxi">
+                {o}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Disclaimer */}
+        <p className="text-[13px] text-ink/35 italic">Look around, then make the call.</p>
+      </div>
+
+      {/* Sticky BOOK IT CTA */}
+      <div className="sticky bottom-0 px-[18px] pt-3.5 pb-[22px] bg-cream border-t border-border shadow-[0_-6px_18px_rgba(0,0,0,0.05)] mt-6">
+        <button
+          onClick={handleBook}
+          className="w-full bg-siren text-cream font-display text-[20px] py-[18px] px-6 flex items-center justify-center gap-2 hover:bg-siren/90 active:scale-[0.98] transition-all shadow-[0_10px_26px_rgba(255,45,45,0.22)]"
+        >
+          BOOK IT<span className="text-taxi">!</span>
+          <span className="opacity-85 text-[18px]">→</span>
+        </button>
+        <p className="text-center mt-2 font-mono text-[9px] tracking-[0.15em] uppercase text-ink/35 font-bold">
+          {session
+            ? `You'll book on ${venue.bookingPartner}. Same price.`
+            : "Sign in to book →"}
+        </p>
       </div>
     </div>
-    </>
   );
 }

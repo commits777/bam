@@ -42,22 +42,25 @@ export default function SignInPage() {
     await signIn(provider, { callbackUrl: "/discover" });
   }
 
+  const GRAIN = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E")`;
+
   return (
-    <div className="min-h-screen bg-ink flex flex-col items-center justify-center px-4 relative overflow-hidden">
-      {/* Background texture */}
-      <div
-        className="absolute inset-0 pointer-events-none opacity-[0.04]"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(255,252,242,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,252,242,1) 1px, transparent 1px)",
-          backgroundSize: "60px 60px",
-        }}
-      />
-      {/* Glow */}
-      <div
-        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] pointer-events-none"
-        style={{ background: "radial-gradient(ellipse at 50% 100%, rgba(255,45,45,0.22) 0%, transparent 70%)" }}
-      />
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 relative overflow-hidden" style={{ background: "#100C09" }}>
+      {/* Warm bokeh blobs */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute rounded-full"
+          style={{ width: 500, height: 400, top: -80, right: -80,
+            background: "radial-gradient(circle, rgba(255,45,45,0.18) 0%, transparent 70%)", filter: "blur(80px)" }} />
+        <div className="absolute rounded-full"
+          style={{ width: 380, height: 320, bottom: -40, left: -60,
+            background: "radial-gradient(circle, rgba(255,208,0,0.1) 0%, transparent 70%)", filter: "blur(90px)" }} />
+        {/* Film grain */}
+        <div className="absolute inset-0 mix-blend-soft-light"
+          style={{ backgroundImage: GRAIN, backgroundRepeat: "repeat", opacity: 0.4 }} />
+        {/* Vignette */}
+        <div className="absolute inset-0"
+          style={{ background: "radial-gradient(ellipse 120% 110% at 50% 50%, transparent 25%, rgba(16,12,9,0.65) 100%)" }} />
+      </div>
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}

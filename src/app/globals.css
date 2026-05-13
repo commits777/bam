@@ -18,6 +18,7 @@
 
 * { box-sizing: border-box; }
 html, body { height: 100%; }
+html { scroll-behavior: smooth; }
 
 body {
   background: var(--color-bone);
@@ -33,7 +34,7 @@ body {
   to   { transform: translateX(-50%); }
 }
 .animate-marquee {
-  animation: marquee 28s linear infinite;
+  animation: marquee 16s linear infinite;
   will-change: transform;
 }
 .animate-marquee:hover { animation-play-state: paused; }

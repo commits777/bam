@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
           </h1>
           <p style="font-size:15px;color:#555;line-height:1.6;margin:0 0 32px;">
             We launch <strong>${LAUNCH_DATE}</strong>. When we do, you'll be first to book
-            <strong>${venue_name}</strong> in <strong>${neighborhood}</strong> — and every other
+            <strong>${venue_name}</strong> in <strong>${neighborhood}</strong> and every other
             date-worthy spot in Athens.
           </p>
           <div style="border-top:1px solid #E5E0D5;padding-top:24px;font-size:12px;color:#aaa;font-family:monospace;letter-spacing:1px;">

@@ -11,7 +11,7 @@ export const t = {
 
     // Hero
     heroLabel: "Athens · Date Night · Curated",
-    heroSub: "50 curated spots. Wine bars, rooftops, jazz clubs — hand-picked for couples in Athens. No fluff.",
+    heroSub: "50 curated spots. Wine bars, rooftops, jazz clubs, hand-picked for couples in Athens. No fluff.",
     findSpot: "Find a spot",
     seeMap: "See the map",
     stat_venues: "Venues",
@@ -73,14 +73,14 @@ export const t = {
     // Discover
     inAthens: "Athens",
     noSpotsTitle: "No spots found",
-    noSpotsBody: "Athens has a spot for every kind of night — try adjusting your filters.",
+    noSpotsBody: "Athens has a spot for every kind of night. Try adjusting your filters.",
     clearFilters: "Clear filters",
 
     // Experience CTA (parallax hero)
     experience: "Experience",
 
     // Footer
-    rights: "© 2026 BAM! · Date night, handled.",
+    rights: "© 2026 BAM! All rights reserved.",
   },
 
   EL: {
@@ -93,7 +93,7 @@ export const t = {
 
     // Hero
     heroLabel: "Αθήνα · Ρομαντικό Βράδυ · Επιλεγμένο",
-    heroSub: "50 επιλεγμένα μέρη. Wine bars, ταράτσες, jazz clubs — για ζευγάρια στην Αθήνα.",
+    heroSub: "50 επιλεγμένα μέρη. Wine bars, ταράτσες, jazz clubs, για ζευγάρια στην Αθήνα.",
     findSpot: "Βρες spot",
     seeMap: "Δες χάρτη",
     stat_venues: "Μέρη",
@@ -155,7 +155,7 @@ export const t = {
     // Discover
     inAthens: "Αθήνα",
     noSpotsTitle: "Δεν βρέθηκαν αποτελέσματα",
-    noSpotsBody: "Υπάρχει spot για κάθε βραδιά — δοκίμασε διαφορετικά φίλτρα.",
+    noSpotsBody: "Υπάρχει spot για κάθε βραδιά. Δοκίμασε διαφορετικά φίλτρα.",
     clearFilters: "Καθαρισμός φίλτρων",
 
     // Experience CTA (parallax hero)
