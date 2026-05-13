@@ -1,13 +1,14 @@
 import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import GitHub from "next-auth/providers/github";
+import Google from "next-auth/providers/google";
 import { prisma } from "@/lib/prisma";
 
-/* ── Custom Instagram provider ──────────────────────────────
-   Instagram doesn't return an email; we generate a synthetic
-   one from the user ID so the unique-email DB constraint holds.
+/* ── Instagram OAuth provider ────────────────────────────────
+   Uses the new Instagram Login API (2024+).
+   Requires a Meta developer app with "Instagram Login" product.
    Callback URL: [domain]/api/auth/callback/instagram
-   Requires: Meta developer app with "Instagram Login" product.
+   Env vars: AUTH_INSTAGRAM_ID, AUTH_INSTAGRAM_SECRET
    ─────────────────────────────────────────────────────────── */
 const Instagram = {
   id: "instagram",
@@ -16,7 +17,7 @@ const Instagram = {
   clientId: process.env.AUTH_INSTAGRAM_ID!,
   clientSecret: process.env.AUTH_INSTAGRAM_SECRET!,
   authorization: {
-    url: "https://api.instagram.com/oauth/authorize",
+    url: "https://www.instagram.com/oauth/authorize",
     params: { scope: "instagram_business_basic" },
   },
   token: {
@@ -50,29 +51,33 @@ const Instagram = {
   },
 };
 
+const providers = [
+  ...(process.env.AUTH_INSTAGRAM_ID ? [Instagram] : []),
+  ...(process.env.AUTH_GOOGLE_ID
+    ? [Google({ clientId: process.env.AUTH_GOOGLE_ID, clientSecret: process.env.AUTH_GOOGLE_SECRET! })]
+    : []),
+  GitHub({
+    clientId: process.env.AUTH_GITHUB_ID!,
+    clientSecret: process.env.AUTH_GITHUB_SECRET!,
+  }),
+];
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
-  providers: [
-    // Phase 2: Instagram OAuth (handle: ian_g477)
-    // Uncomment when Meta developer app is approved:
-    // Instagram,
-    GitHub({
-      clientId: process.env.AUTH_GITHUB_ID!,
-      clientSecret: process.env.AUTH_GITHUB_SECRET!,
-    }),
-  ],
+  providers,
   callbacks: {
     async session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
         session.user.role = (user as { role?: string }).role ?? "user";
         session.user.bio = (user as { bio?: string }).bio ?? null;
+        session.user.instagram = (user as { instagram?: string }).instagram ?? null;
+        session.user.phone = (user as { phone?: string }).phone ?? null;
       }
       return session;
     },
     async signIn({ user, profile }) {
       const isAdminEmail = user.email === process.env.ADMIN_EMAIL;
-      // Phase 2: also grant admin to Instagram handle ian_g477
       const isAdminInstagram =
         (profile as { username?: string } | undefined)?.username === "ian_g477";
 
@@ -98,6 +103,8 @@ declare module "next-auth" {
       image?: string | null;
       role?: string;
       bio?: string | null;
+      instagram?: string | null;
+      phone?: string | null;
     };
   }
 }
