@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo_Black, Bricolage_Grotesque, JetBrains_Mono } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
+import { Analytics } from "@vercel/analytics/react";
 import { LangProvider } from "@/contexts/lang-context";
 import ProfileSetupModal from "@/components/profile-setup-modal";
 import "./globals.css";
@@ -186,6 +187,12 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        {/* Plausible Analytics */}
+        <script
+          defer
+          data-domain="getbam.fun"
+          src="https://plausible.io/js/script.js"
+        />
       </head>
       <body className="h-full">
         <SessionProvider>
@@ -194,6 +201,8 @@ export default function RootLayout({
           </LangProvider>
           <ProfileSetupModal />
         </SessionProvider>
+        {/* Vercel Analytics */}
+        <Analytics />
       </body>
     </html>
   );
