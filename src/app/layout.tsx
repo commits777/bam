@@ -2,9 +2,12 @@ import type { Metadata, Viewport } from "next";
 import { Archivo_Black, Bricolage_Grotesque, JetBrains_Mono } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
 import { Analytics } from "@vercel/analytics/react";
+import Script from "next/script";
 import { LangProvider } from "@/contexts/lang-context";
 import ProfileSetupModal from "@/components/profile-setup-modal";
 import "./globals.css";
+
+const GA_ID = "G-NLWVBF51LV";
 
 const archivo = Archivo_Black({
   weight: "400",
@@ -203,6 +206,14 @@ export default function RootLayout({
         </SessionProvider>
         {/* Vercel Analytics */}
         <Analytics />
+        {/* Google Analytics (GA4) */}
+        <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
+        <Script id="ga4-init" strategy="afterInteractive">{`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${GA_ID}');
+        `}</Script>
       </body>
     </html>
   );
