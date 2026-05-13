@@ -176,7 +176,7 @@ function SheetBody({
           <div className="absolute bottom-[-22px] left-[18px] bg-cream px-3.5 py-2.5 rounded-lg shadow-[0_4px_12px_rgba(0,0,0,0.12)]">
             <span className="inline-flex items-baseline gap-1 font-mono text-[10px] tracking-[0.18em] uppercase font-bold">
               <span className="opacity-60">BAM</span>
-              <span className="text-siren">№</span>
+              <span className="text-siren">!</span>
               <span>{String(venue.no).padStart(2, "0")}</span>
             </span>
           </div>

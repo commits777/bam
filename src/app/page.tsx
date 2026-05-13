@@ -38,7 +38,7 @@ function EditorialNo({ n, className = "" }: { n: number; className?: string }) {
   return (
     <span className={`inline-flex items-baseline gap-1 font-mono text-[10px] tracking-[0.18em] uppercase font-bold ${className}`}>
       <span className="opacity-60">BAM</span>
-      <span className="text-siren">№</span>
+      <span className="text-siren">!</span>
       <span>{String(n).padStart(2, "0")}</span>
     </span>
   );
@@ -234,7 +234,7 @@ export default function HomePage() {
         {/* Top strip */}
         <div className="flex items-center justify-between px-5 pt-4 pb-0">
           <span className="font-mono text-[10px] tracking-[0.18em] uppercase text-cream/65">
-            ATHENS · BAM № 2026
+            ATHENS · BAM! 2026
           </span>
         </div>
 

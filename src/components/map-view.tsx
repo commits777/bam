@@ -55,6 +55,9 @@ export default function MapView({ venues, selectedVenue, onVenueSelect }: MapVie
 
       // Add markers
       addMarkers(L, map, venues, selectedVenue, onVenueSelect);
+
+      // Leaflet needs a size hint after the container is fully laid out
+      setTimeout(() => map.invalidateSize(), 100);
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

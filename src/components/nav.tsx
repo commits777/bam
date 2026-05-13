@@ -55,7 +55,7 @@ export default function Nav() {
         {/* Logo */}
         <Link href="/" className="flex items-center shrink-0">
           <span className={cn("font-display text-[26px] leading-none tracking-[-0.04em] transition-colors duration-200", textColor)}>
-            BAM<span className="text-siren">!</span>
+            BAM<span className={onDarkHero ? "text-taxi" : "text-siren"}>!</span>
           </span>
         </Link>
 

@@ -24,7 +24,7 @@ function EditorialNo({ n }: { n: number }) {
   return (
     <span className="inline-flex items-baseline gap-1 font-mono text-[9px] tracking-[0.18em] uppercase font-bold">
       <span className="opacity-60">BAM</span>
-      <span className="text-siren">№</span>
+      <span className="text-siren">!</span>
       <span>{String(n).padStart(2, "0")}</span>
     </span>
   );

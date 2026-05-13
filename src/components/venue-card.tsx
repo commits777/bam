@@ -94,7 +94,7 @@ export default function VenueCard({
           <div className="absolute top-2.5 right-3 bg-cream px-2 py-1 rounded">
             <span className="inline-flex items-baseline gap-1 font-mono text-[9px] tracking-[0.18em] uppercase font-bold">
               <span className="opacity-60">BAM</span>
-              <span className="text-siren">№</span>
+              <span className="text-siren">!</span>
               <span>{String(venue.no).padStart(2, "0")}</span>
             </span>
           </div>
