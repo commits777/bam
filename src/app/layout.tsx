@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo_Black, Bricolage_Grotesque, JetBrains_Mono } from "next/font/google";
+import { Archivo_Black, Bricolage_Grotesque, JetBrains_Mono, Exo_2 } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
 import { Analytics } from "@vercel/analytics/react";
 import { LangProvider } from "@/contexts/lang-context";
+import { ThemeProvider } from "@/contexts/theme-context";
 import ProfileSetupModal from "@/components/profile-setup-modal";
 import "./globals.css";
 
@@ -26,6 +27,13 @@ const jetbrains = JetBrains_Mono({
   weight: ["400", "700"],
   variable: "--font-jetbrains",
   subsets: ["latin"],
+  display: "swap",
+});
+
+const exo2 = Exo_2({
+  weight: ["900"],
+  variable: "--font-exo2",
+  subsets: ["greek", "latin"],
   display: "swap",
 });
 
@@ -182,7 +190,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${archivo.variable} ${bricolage.variable} ${jetbrains.variable} h-full`}
+      className={`${archivo.variable} ${bricolage.variable} ${jetbrains.variable} ${exo2.variable} h-full`}
     >
       <head>
         <script
@@ -205,9 +213,11 @@ export default function RootLayout({
       </head>
       <body className="h-full">
         <SessionProvider>
-          <LangProvider>
-            {children}
-          </LangProvider>
+          <ThemeProvider>
+            <LangProvider>
+              {children}
+            </LangProvider>
+          </ThemeProvider>
           <ProfileSetupModal />
         </SessionProvider>
         {/* Vercel Analytics */}

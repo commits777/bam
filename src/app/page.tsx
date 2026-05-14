@@ -324,6 +324,8 @@ export default function HomePage() {
             <span className="text-cream/15">·</span>
             <span>Athens, GR</span>
             <span className="text-cream/15">·</span>
+            <a href="https://www.instagram.com/bam.athens/" target="_blank" rel="noopener noreferrer" className="hover:text-cream/60 transition-colors">@bam.athens</a>
+            <span className="text-cream/15">·</span>
             <Link href="/apply" className="hover:text-cream/60 transition-colors">List your venue</Link>
           </div>
           <p className="font-mono text-[10px] text-cream/20">© {new Date().getFullYear()} BAM!</p>
