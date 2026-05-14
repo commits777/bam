@@ -11,7 +11,7 @@
   --color-border: #E8E3D9;
 
   /* ── Fonts ── */
-  --font-display: var(--font-archivo), var(--font-exo2), sans-serif;
+  --font-display: var(--font-archivo), 'Exo 2', sans-serif;
   --font-body: var(--font-bricolage);
   --font-mono: var(--font-jetbrains);
 }
