@@ -1,0 +1,14 @@
+<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" fill="#0A0A0A"/>
+  <text
+    x="256"
+    y="298"
+    font-family="'Arial Black', 'Impact', 'Helvetica Neue', sans-serif"
+    font-weight="900"
+    font-size="208"
+    text-anchor="middle"
+    dominant-baseline="auto"
+    fill="#FFFCF2"
+    letter-spacing="-6"
+  >BAM<tspan fill="#FF2D2D">!</tspan></text>
+</svg>
