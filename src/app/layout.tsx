@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo_Black, Bricolage_Grotesque, JetBrains_Mono, Exo_2 } from "next/font/google";
+import { Archivo_Black, Bricolage_Grotesque, JetBrains_Mono } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
 import { Analytics } from "@vercel/analytics/react";
 import { LangProvider } from "@/contexts/lang-context";
@@ -27,13 +27,6 @@ const jetbrains = JetBrains_Mono({
   weight: ["400", "700"],
   variable: "--font-jetbrains",
   subsets: ["latin"],
-  display: "swap",
-});
-
-const exo2 = Exo_2({
-  weight: ["900"],
-  variable: "--font-exo2",
-  subsets: ["greek", "latin"],
   display: "swap",
 });
 
@@ -190,9 +183,14 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${archivo.variable} ${bricolage.variable} ${jetbrains.variable} ${exo2.variable} h-full`}
+      className={`${archivo.variable} ${bricolage.variable} ${jetbrains.variable} h-full`}
     >
       <head>
+        {/* Exo 2 — Greek+Latin bold fallback for display text */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
+        <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@900&subset=greek&display=swap" rel="stylesheet" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
