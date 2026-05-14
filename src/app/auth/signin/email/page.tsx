@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { signIn } from "next-auth/react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
@@ -10,9 +11,7 @@ export default function EmailSignInPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    // Magic link via NextAuth email provider — requires SMTP config in .env.local
-    // AUTH_EMAIL_SERVER="smtp://user:pass@smtp.example.com:587"
-    // AUTH_EMAIL_FROM="BAM! <noreply@getbam.fun>"
+    await signIn("email", { email, callbackUrl: "/discover", redirect: false });
     setSent(true);
   }
 

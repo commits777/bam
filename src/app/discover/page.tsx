@@ -68,6 +68,8 @@ function Sidebar({
   setFilters: (f: FilterState) => void;
   activeCount: number;
 }) {
+  const { lang } = useLang();
+  const isEL = lang === "EL";
   return (
     <aside className="hidden lg:flex flex-col gap-5 w-[260px] shrink-0 border-r border-border bg-cream px-5 py-5 overflow-y-auto">
       <div className="flex items-baseline justify-between">
@@ -101,7 +103,7 @@ function Sidebar({
             active={filters.neighborhood === en}
             onClick={() => setFilters({ ...filters, neighborhood: filters.neighborhood === en ? null : en as FilterState["neighborhood"] })}
           >
-            {gr}
+            {isEL ? gr : en}
           </FilterChip>
         ))}
       </SidebarGroup>
@@ -160,6 +162,8 @@ function FilterDrawer({
   filteredCount: number;
   onClose: () => void;
 }) {
+  const { lang } = useLang();
+  const isEL = lang === "EL";
   const activeCount = [filters.neighborhood, filters.vibe, filters.budget, filters.occasion].filter(Boolean).length
     + (filters.openNow ? 1 : 0) + (filters.walk ? 1 : 0);
 
@@ -196,7 +200,7 @@ function FilterDrawer({
           <SidebarGroup label="Neighborhood">
             {Object.entries(NEIGHBORHOOD_GR).map(([en, gr]) => (
               <FilterChip key={en} active={filters.neighborhood === en} onClick={() => setFilters({ ...filters, neighborhood: filters.neighborhood === en ? null : en as FilterState["neighborhood"] })}>
-                {gr}
+                {isEL ? gr : en}
               </FilterChip>
             ))}
           </SidebarGroup>

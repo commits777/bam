@@ -11,7 +11,7 @@
   --color-border: #E8E3D9;
 
   /* ── Fonts ── */
-  --font-display: var(--font-archivo);
+  --font-display: var(--font-archivo), var(--font-exo2), sans-serif;
   --font-body: var(--font-bricolage);
   --font-mono: var(--font-jetbrains);
 }
@@ -104,4 +104,13 @@ body {
   font-size: 9px !important;
   opacity: 0.5;
   background: transparent !important;
+}
+
+/* ── Dark theme ── */
+[data-theme="dark"] {
+  --color-cream: #1A1714;
+  --color-bone: #221E1B;
+  --color-ink: #F0EDE4;
+  --color-border: #2E2926;
+  --color-muted: #777070;
 }
