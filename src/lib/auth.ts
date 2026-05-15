@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import Google from "next-auth/providers/google";
+import Resend from "next-auth/providers/resend";
 import { prisma } from "@/lib/prisma";
 
 /* ── Instagram OAuth provider ────────────────────────────────
@@ -56,6 +57,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     ...(process.env.AUTH_INSTAGRAM_ID ? [Instagram] : []),
     ...(process.env.AUTH_GOOGLE_ID
       ? [Google({ clientId: process.env.AUTH_GOOGLE_ID, clientSecret: process.env.AUTH_GOOGLE_SECRET! })]
+      : []),
+    ...(process.env.RESEND_API_KEY
+      ? [Resend({ apiKey: process.env.RESEND_API_KEY, from: process.env.AUTH_EMAIL_FROM ?? "BAM! <noreply@getbam.fun>" })]
       : []),
   ],
   callbacks: {
