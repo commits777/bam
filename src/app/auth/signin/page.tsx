@@ -114,14 +114,6 @@ export default function SignInPage() {
 
           </div>
 
-          <div className="flex items-center justify-center mt-6">
-            <Link
-              href="/auth/signin/email"
-              className="font-mono text-[11px] text-cream/40 hover:text-cream/70 underline underline-offset-4 decoration-cream/25 hover:decoration-cream/50 transition-colors tracking-wide"
-            >
-              Log in with Email
-            </Link>
-          </div>
         </div>
 
         <p className="text-center font-mono text-[10px] text-cream/20 mt-5 leading-relaxed px-4">
